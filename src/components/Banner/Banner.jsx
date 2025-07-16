@@ -39,11 +39,11 @@ const Banner = ({ image, title, subtitle, link, tag, reverse }) => {
         viewport={{ once: true, amount: 0.3 }}
         transition={{ type: 'spring', stiffness: 60, damping: 14, delay: 0.25 }}
       >
-        <p className='text-sm text-orange-600 capitalize font-semibold tracking-wide'>
+        <p className='text-lg text-orange-600 capitalize font-semibold tracking-wide'>
           {tag}
         </p>
         <h2 className='text-xl lg:text-2xl font-semibold'>{title}</h2>
-        <p className='text-sm text-slate-500'>{subtitle}</p>
+        <p className='text-sm text-slate-500 text-pretty'>{subtitle}</p>
         <div>
           <button className='mt-4 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-full transition-all duration-300 shadow-lg'>
             Get Started

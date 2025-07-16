@@ -1,5 +1,5 @@
 import React from 'react';
-import HeroImg from '../../assets/hero.jpg'; // Update this path as needed
+import HeroImg from '../../assets/undraw_under-construction_c2y1.svg'; 
 import { FaPlay } from 'react-icons/fa';
 import {motion, spring} from 'framer-motion';
 import { SlideRight } from '../../utility/animation';
@@ -18,16 +18,15 @@ const Hero = () => {
         initial="hidden"
         animate="visible"
          className="text-5xl md:text-5xl font-semibold lg:text-6xl !leading-tight">
-          Find your Perfect <span className="text-primary">Tutor</span>
+          Find your Perfect <span className="text-primary">Place</span>
         </motion.h1>
         <motion.p variants={SlideRight(0.8)} 
         initial="hidden"
         animate="visible"
          className="text-gray-700">
-          We have a large pool of experienced tutors who are ready to help you achieve your goals. 
-          Our tutors are experts in their fields and are dedicated to providing you with the best possible learning experience.
+          Give us a vision of your dream place, and we will make it a reality. Our team of experts is here to guide you every step of the way.        
         </motion.p>
-
+  
         {/* Buttons */}
         <motion.div
   variants={SlideRight(1.0)}

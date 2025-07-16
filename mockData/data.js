@@ -6,12 +6,12 @@ export const NavbarMenu=[
     },
     {
         id:2,
-        title:"For Students",
+        title:"Pricing",
         link:"/#",
     },
     {
         id:3,
-        title:"Resources",
+        title:"Services",
         link:"/#",
     },
     {

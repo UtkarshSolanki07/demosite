@@ -1,41 +1,39 @@
 import React from 'react'
-import { GrYoga } from 'react-icons/gr'
-import { FaDumbbell } from 'react-icons/fa6'
-import { GiGymBag } from 'react-icons/gi'
+import { FaHardHat, FaTools, FaBuilding, FaTruck } from 'react-icons/fa'
 import { motion } from 'framer-motion'
 import { SlideLeft } from '../../utility/animation'
 
 const WhyChooseData = [
     {
         id: 1,
-        title: "One-on-One Teaching",
-        desc: "Our tutors provide personalized attention to each student, ensuring they receive the support needed to succeed.",
-        icon: <GrYoga />,
-        bgColor: "#0063ff",
+        title: "Experienced Workforce",
+        desc: "Our skilled professionals bring years of experience to every project, ensuring quality and reliability.",
+        icon: <FaHardHat />,
+        bgColor: "#f97316", 
         delay: 0.2,
     },
     {
         id: 2,
-        title: "24/7 Availability",
-        desc: "Our tutors are available around the clock to help with your studies—anytime, anywhere.",
-        icon: <FaDumbbell />,
-        bgColor: "#73bc00",
+        title: "Quality Materials",
+        desc: "We use only the highest quality materials to guarantee durability and long-lasting results.",
+        icon: <FaTools />,
+        bgColor: "#2563eb",
         delay: 0.4,
     },
     {
         id: 3,
-        title: "Flexible Scheduling",
-        desc: "We offer flexible scheduling options to fit your busy lifestyle and learning pace.",
-        icon: <GiGymBag />,
-        bgColor: "#fa6400",
+        title: "Timely Project Completion",
+        desc: "We pride ourselves on completing projects on schedule without compromising on quality.",
+        icon: <FaBuilding />,
+        bgColor: "#4ade80", 
         delay: 0.6,
     },
     {
         id: 4,
-        title: "Affordable Pricing",
-        desc: "We ensure quality education is accessible to all through our competitive pricing.",
-        icon: <GiGymBag />,
-        bgColor: "#fe6baa",
+        title: "Comprehensive Services",
+        desc: "From planning to execution, we offer a full range of construction services tailored to your needs.",
+        icon: <FaTruck />,
+        bgColor: "#f43f5e", 
         delay: 0.8,
     },
 ]
@@ -47,7 +45,7 @@ const WhyChooseUs = () => {
                 {/* Header */}
                 <div className='text-center mb-16'>
                     <h2 className='text-orange-600 uppercase font-bold text-sm tracking-wider'>Why Choose Us</h2>
-                    <h1 className='text-4xl font-bold text-gray-800 mt-2'>Benefits of our tutoring services</h1>
+                    <h1 className='text-4xl font-bold text-gray-800 mt-2'>Our Speciality</h1>
                 </div>
 
                 {/* Cards */}
