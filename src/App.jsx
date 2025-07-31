@@ -1,15 +1,22 @@
 import React from 'react'
-import Navbar from './components/Navbar'
-import NavbarBanner from './components/NavbarBanner'
-import Hero from './components/Hero/Hero'
-import NumberCounter from './components/NumberCounter/NumberCounter'
-import WhyChooseUs from './components/WhyChooseUs/WhyChooseUs'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar.jsx'
+import Footer from './components/Footer/Footer.jsx'
+import Hero from './components/Hero/Hero.jsx'
+import Banner from './components/Banner/Banner.jsx'
+import WhyChooseUs from './components/WhyChooseUs/WhyChooseUs.jsx'
+import NumberCounter from './components/NumberCounter/NumberCounter.jsx'
+import SubjectCard from './components/SubjectCard/SubjectCard.jsx'
+import Testimonials from './components/Testimonials/Testimonials.jsx'
+import Dashboard from './pages/Dashboard.jsx'
+import Profile from './pages/Profile.jsx'
+import Pricing from './pages/Pricing.jsx'
 import Img1 from './assets/alex-wong-l5Tzv1alcps-unsplash.jpg'
 import Img2 from './assets/josh-olalde-X1P1_EDNnok-unsplash.jpg'
-import Banner from './components/Banner/Banner'
-import SubjectCard from './components/SubjectCard/SubjectCard'
-import Testimonials from './components/Testimonials/Testimonials'
-import Footer from './components/Footer/Footer'
+import Contact from './pages/Contact.jsx'
+import Services from './pages/Services.jsx'
+import About from './pages/About.jsx'
+
 const BannerData={
   image:Img1,
   tag:"Building Your Future",
@@ -25,22 +32,37 @@ const BannerData2={
   subtitle:"From residential to commercial projects, we provide personalized construction solutions designed to fit your unique requirements and vision.",
   link:"/#",
 };
-const App = () => {
+const HomePage = () => {
   return (
-    <div>
-      <main className='overflow-x-hidden'>
-      <Navbar/>
-      <NavbarBanner />
-      <Hero/>
-      <NumberCounter/>
-      <WhyChooseUs/>
-      <Banner {...BannerData}/>
-      <Banner {...BannerData2} reverse={true}/>
-      <SubjectCard/>
+    <>
+      <Hero />
+      <NumberCounter />
+      <Banner {...BannerData} />
+      <Banner {...BannerData2} reverse={true} />
+      <WhyChooseUs />
+      <SubjectCard />
       <Testimonials />
-      <Footer />
-      </main>
-    </div>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <div className="App">
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />}/>
+          <Route path="/pricing" element ={<Pricing />}  />
+          <Route path="/contact-us" element={<Contact />} />
+          <Route path="/services" element={<Services />} />
+          <Route path="/about-us" element={<About />} />
+        </Routes>
+        <Footer />
+      </div>
+    </Router>
   )
 }
 
