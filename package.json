@@ -7,11 +7,17 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server.js"
   },
   "dependencies": {
-    "@clerk/clerk-react": "^5.34.0",
+    "@clerk/clerk-js": "^5.79.0",
+    "@clerk/clerk-react": "^5.38.1",
+    "@supabase/supabase-js": "^2.53.0",
     "autoprefixer": "^10.4.21",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^4.18.2",
     "framer-motion": "^12.7.4",
     "lucide-react": "^0.503.0",
     "postcss": "^8.5.3",

@@ -16,6 +16,7 @@ import Img2 from './assets/josh-olalde-X1P1_EDNnok-unsplash.jpg'
 import Contact from './pages/Contact.jsx'
 import Services from './pages/Services.jsx'
 import About from './pages/About.jsx'
+import useSyncUser from './hooks/userSyncUser.js'
 
 const BannerData={
   image:Img1,
@@ -47,6 +48,8 @@ const HomePage = () => {
 }
 
 function App() {
+  useSyncUser()
+
   return (
     <Router>
       <div className="App">
