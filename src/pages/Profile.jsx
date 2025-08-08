@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { motion } from 'framer-motion'
 import { 
-  User,  Mail, Phone, MapPin, Calendar, Edit, Save, X,Camera,Building,Briefcase,Star,DollarSign,CheckCircle,Clock,
+  User,  Mail, Phone, MapPin, Calendar, Edit, Save, X, Camera, Building, Briefcase, Star, DollarSign, CheckCircle, Clock,
   Star as StarIcon
 } from 'lucide-react'
-import { mockClients, mockProjects } from '../../mockData/data.js'
+import ProjectHistory from '../components/ProjectHistory'
 
 const Profile = () => {
   const { user } = useUser()
   const [isEditing, setIsEditing] = useState(false)
   const [clientData, setClientData] = useState(null)
-  const [clientProjects, setClientProjects] = useState([])
   const [formData, setFormData] = useState({})
   const [avatarFile, setAvatarFile] = useState(null)
   
@@ -46,55 +45,33 @@ const Profile = () => {
   }
 
   useEffect(() => {
-    // Find client data based on email
-    const currentClient = mockClients.find(c => c.email === user?.emailAddresses[0]?.emailAddress)
-    if (currentClient) {
-      setClientData(currentClient)
-      // Get client's projects
-      const projects = mockProjects.filter(project => 
-        currentClient.projects.includes(project.id)
-      )
-      setClientProjects(projects)
-      setFormData({
-        firstName: currentClient.firstName,
-        lastName: currentClient.lastName,
-        phone: currentClient.phone,
-        company: currentClient.company,
-        position: currentClient.position,
-        address: currentClient.address,
-        preferredContact: currentClient.preferredContact
-      })
-    } else {
-      const defaultClient = {
-        firstName: user?.firstName || 'Demo',
-        lastName: user?.lastName || 'Client',
-        email: user?.emailAddresses[0]?.emailAddress || 'demo@client.com',
-        phone: '+1 (555) 000-0000',
-        company: 'Demo Company',
-        position: 'Manager',
-        joinDate: new Date().toISOString(),
-        avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-        projects: [],
-        totalSpent: 0,
-        completedProjects: 0,
-        activeProjects: 0,
-        averageRating: null,
-        status: 'Active',
-        address: '123 Demo St, Demo City, DC 12345',
-        preferredContact: 'email'
-      }
-      setClientData(defaultClient)
-      setClientProjects([])
-      setFormData({
-        firstName: defaultClient.firstName,
-        lastName: defaultClient.lastName,
-        phone: defaultClient.phone,
-        company: defaultClient.company,
-        position: defaultClient.position,
-        address: defaultClient.address,
-        preferredContact: defaultClient.preferredContact
-      })
-    }
+    // Load user profile data from Clerk user object
+    setClientData({
+      firstName: user?.firstName || 'Demo',
+      lastName: user?.lastName || 'Client',
+      email: user?.emailAddresses[0]?.emailAddress || 'demo@client.com',
+      phone: '',
+      company: '',
+      position: '',
+      joinDate: new Date().toISOString(),
+      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+      status: 'Active',
+      address: '',
+      preferredContact: 'email',
+      completedProjects: 0,
+      activeProjects: 0,
+      totalSpent: 0,
+      averageRating: null,
+    })
+    setFormData({
+      firstName: user?.firstName || '',
+      lastName: user?.lastName || '',
+      phone: '',
+      company: '',
+      position: '',
+      address: '',
+      preferredContact: 'email',
+    })
   }, [user])
 
   const handleSave = () => {
@@ -439,87 +416,11 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            {/* Project History */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">Project History with EzyBuilds</h3>
-              {clientProjects.length > 0 ? (
-                <div className="space-y-4">
-                  {clientProjects.map((project) => (
-                    <div key={project.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h4 className="font-semibold text-gray-900">{project.title}</h4>
-                          <p className="text-sm text-gray-600">{project.description}</p>
-                        </div>
-                        <div className="text-right">
-                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                            project.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                            project.status === 'In Progress' ? 'bg-yellow-100 text-yellow-800' :
-                            'bg-blue-100 text-blue-800'
-                          }`}>
-                            {project.status}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                        <div>
-                          <span className="text-gray-600">Budget:</span>
-                          <p className="font-medium">{formatCurrency(project.budget)}</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Progress:</span>
-                          <p className="font-medium">{project.progress}%</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Completed:</span>
-                          <p className="font-medium">{formatDate(project.endDate)}</p>
-                        </div>
-                        <div>
-                          <span className="text-gray-600">Project Manager:</span>
-                          <p className="font-medium">{project.projectManager}</p>
-                        </div>
-                      </div>
-                      {project.rating && (
-                        <div className="mt-3 pt-3 border-t border-gray-100">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm text-gray-600">Your Rating:</span>
-                            <div className="flex items-center gap-1">
-                              {[...Array(5)].map((_, i) => (
-                                <StarIcon 
-                                  key={i} 
-                                  className={`w-4 h-4 ${i < project.rating ? 'text-yellow-500 fill-current' : 'text-gray-300'}`} 
-                                />
-                              ))}
-                            </div>
-                          </div>
-                          {project.review && (
-                            <p className="text-sm text-gray-700 italic">"{project.review}"</p>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Building className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h4 className="text-lg font-medium text-gray-900 mb-2">No projects yet</h4>
-                  <p className="text-gray-600">You haven't contracted any projects with EzyBuilds yet.</p>
-                  <a 
-                    href="/dashboard" 
-                    className="inline-block mt-4 px-6 py-2 bg-secondary text-white rounded-lg hover:bg-secondary/90 transition-colors"
-                  >
-                    Start Your First Project
-                  </a>
-                </div>
-              )}
-            </div>
+            <ProjectHistory />
           </motion.div>
         </div>
       </div>
     </div>
   )
 }
-export default Profile 
+export default Profile

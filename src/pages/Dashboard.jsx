@@ -5,6 +5,7 @@ import {
   Building, MapPin, Calendar, DollarSign, FileText, Send, CheckCircle,
   AlertCircle, Clock, Star, Users, Award, Sparkles, Shield, Trophy
 } from 'lucide-react'
+import { supabase } from '../utils/supabaseClient'
 
 // Mock project types data
 const projectTypes = [
@@ -14,6 +15,14 @@ const projectTypes = [
   { id: 4, name: 'Infrastructure', description: 'Roads, bridges, utilities' },
   { id: 5, name: 'Industrial Construction', description: 'Factories, plants, facilities' }
 ]
+
+const stringToBigInt = (str) => {
+  let hash = 0n
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31n + BigInt(str.charCodeAt(i))) % 9223372036854775807n
+  }
+  return hash
+}
 
 const Dashboard = () => {
   const { user } = useUser()
@@ -38,8 +47,30 @@ const Dashboard = () => {
     setFormData(prev => ({ ...prev, budget: formatted }))
   }
 
-  const handleSubmit = async () => {
+const handleSubmit = async () => {
     setIsSubmitting(true)
+    const numericId = stringToBigInt(user.id)
+    const contractData = {
+      user_id: numericId.toString(),
+      project_title: formData.projectTitle,
+      project_type: formData.projectType,
+      descrption: formData.description,
+      location: formData.location,
+      budget: formData.budget,
+      timeline: formData.timeline,
+      start_date: formData.startDate,
+      additional_notes: formData.additionalNotes,
+      contact_pref: formData.contactPreference,
+    }
+
+    const { error } = await supabase.from('Contracts').insert([contractData])
+
+    if (error) {
+      console.error('Error saving contract:', error)
+      setIsSubmitting(false)
+      return
+    }
+
     await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
     setIsSubmitting(false)
     setIsSubmitted(true)
