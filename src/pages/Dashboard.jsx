@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useUser } from '@clerk/clerk-react'
 import { motion } from 'framer-motion'
 import { 
@@ -6,6 +6,7 @@ import {
   AlertCircle, Clock, Star, Users, Award, Sparkles, Shield, Trophy
 } from 'lucide-react'
 import { supabase } from '../utils/supabaseClient'
+import ProjectHistory from '../components/ProjectHistory'
 
 // Mock project types data
 const projectTypes = [
@@ -34,9 +35,55 @@ const Dashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
+  // Project history state
+  const [projects, setProjects] = useState([])
+  const [loadingProjects, setLoadingProjects] = useState(true)
+  const [errorProjects, setErrorProjects] = useState(null)
+
+  // Fetch project history for the user
+  useEffect(() => {
+    const fetchProjects = async () => {
+      if (!user) return;
+      setLoadingProjects(true);
+      setErrorProjects(null);
+      try {
+        // Always use the same user_id format as when saving (BigInt string)
+        const numericId = stringToBigInt(user.id).toString();
+        const { data, error } = await supabase
+          .from('Contracts')
+          .select('*')
+          .eq('user_id', numericId);
+        if (error) throw error;
+        // Map fields to what ProjectHistory expects
+        const mapped = (data || []).map((p) => ({
+          id: p.id,
+          title: p.project_title,
+          description: p.descrption || p.description || '',
+          project_type: p.project_type,
+          location: p.location,
+          budget: Number((p.budget || '').toString().replace(/[^\d]/g, '')),
+          timeline: p.timeline,
+          start_date: p.start_date,
+          end_date: p.end_date,
+          status: p.status || 'Submitted',
+          progress: p.progress || 0,
+          projectManager: p.projectManager || '',
+          rating: p.rating || null,
+          review: p.review || null,
+        }));
+        setProjects(mapped);
+      } catch (err) {
+        setErrorProjects('Failed to load project history.');
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+    fetchProjects();
+  }, [user, isSubmitted]);
+
   const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   }
 
   const handleBudgetChange = (e) => {
@@ -74,6 +121,7 @@ const handleSubmit = async () => {
     await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
     setIsSubmitting(false)
     setIsSubmitted(true)
+    // After submit, project history will refresh due to isSubmitted in useEffect
   }
 
   const resetForm = () => {
@@ -145,6 +193,14 @@ const handleSubmit = async () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       <div className="container mx-auto px-4 max-w-4xl py-8">
+        {/* Project History Section */}
+        <div className="mb-12">
+          <ProjectHistory
+            projects={projects}
+            loading={loadingProjects}
+            error={errorProjects}
+          />
+        </div>
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}

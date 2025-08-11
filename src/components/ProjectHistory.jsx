@@ -13,69 +13,8 @@ import {
   AlertCircle
 } from 'lucide-react'
 
-const ProjectHistory = () => {
-  const { user } = useUser()
-  const [projects, setProjects] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  const mockProjects = [
-    {
-      id: 1,
-      title: "Modern Office Renovation",
-      description: "Complete renovation of downtown office space with modern design elements",
-      project_type: "Commercial Renovation",
-      location: "Downtown Business District",
-      budget: 75000,
-      timeline: "3 months",
-      start_date: "2024-01-15",
-      end_date: "2024-04-15",
-      status: "Completed",
-      progress: 100,
-      projectManager: "Sarah Johnson",
-      rating: 5,
-      review: "Excellent work! The team delivered beyond expectations."
-    },
-    {
-      id: 2,
-      title: "Residential Kitchen Remodel",
-      description: "Complete kitchen renovation with custom cabinetry and modern appliances",
-      project_type: "Residential Remodel",
-      location: "Suburban Area",
-      budget: 35000,
-      timeline: "6 weeks",
-      start_date: "2024-02-01",
-      end_date: "2024-03-15",
-      status: "In Progress",
-      progress: 75,
-      projectManager: "Mike Chen",
-      rating: null,
-      review: null
-    },
-    {
-      id: 3,
-      title: "Retail Store Buildout",
-      description: "New retail space construction with custom fixtures and branding",
-      project_type: "Commercial Buildout",
-      location: "Shopping Center",
-      budget: 120000,
-      timeline: "4 months",
-      start_date: "2024-03-01",
-      end_date: "2024-07-01",
-      status: "Planning",
-      progress: 15,
-      projectManager: "Emily Rodriguez",
-      rating: null,
-      review: null
-    }
-  ]
-
-  useEffect(() => {
-    setTimeout(() => {
-      setProjects(mockProjects)
-      setLoading(false)
-    }, 1000)
-  }, [user])
+const ProjectHistory = ({ projects = [], loading = false, error = null }) => {
+  // Removed mock data and local state. Now expects data via props.
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react'
 import ProjectHistory from '../components/ProjectHistory'
 
-const Profile = () => {
+const Profile = ({ projects = [], loadingProjects = false, errorProjects = null }) => {
   const { user } = useUser()
   const [isEditing, setIsEditing] = useState(false)
   const [clientData, setClientData] = useState(null)
@@ -416,11 +416,71 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            <ProjectHistory />
+            <ProjectHistory 
+              projects={projects}
+              loading={loadingProjects}
+              error={errorProjects}
+            />
           </motion.div>
         </div>
       </div>
     </div>
   )
 }
-export default Profile
+
+// --- Project history logic ---
+import { supabase } from '../utils/supabaseClient'
+const stringToBigInt = (str) => {
+  let hash = 0n
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31n + BigInt(str.charCodeAt(i))) % 9223372036854775807n
+  }
+  return hash
+}
+
+export default function ProfileWithHistory(props) {
+  const { user } = useUser();
+  const [projects, setProjects] = React.useState([]);
+  const [loadingProjects, setLoadingProjects] = React.useState(true);
+  const [errorProjects, setErrorProjects] = React.useState(null);
+
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      if (!user) return;
+      setLoadingProjects(true);
+      setErrorProjects(null);
+      try {
+        const numericId = stringToBigInt(user.id).toString();
+        const { data, error } = await supabase
+          .from('Contracts')
+          .select('*')
+          .eq('user_id', numericId);
+        if (error) throw error;
+        const mapped = (data || []).map((p) => ({
+          id: p.id,
+          title: p.project_title,
+          description: p.descrption || p.description || '',
+          project_type: p.project_type,
+          location: p.location,
+          budget: Number((p.budget || '').toString().replace(/[^\d]/g, '')),
+          timeline: p.timeline,
+          start_date: p.start_date,
+          end_date: p.end_date,
+          status: p.status || 'Submitted',
+          progress: p.progress || 0,
+          projectManager: p.projectManager || '',
+          rating: p.rating || null,
+          review: p.review || null,
+        }));
+        setProjects(mapped);
+      } catch (err) {
+        setErrorProjects('Failed to load project history.');
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+    fetchProjects();
+  }, [user]);
+
+  return <Profile {...props} projects={projects} loadingProjects={loadingProjects} errorProjects={errorProjects} />;
+}
