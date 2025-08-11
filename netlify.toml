@@ -1,0 +1,10 @@
+# Netlify configuration for Vite app
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # These variables are intentionally exposed in the client bundle (public keys/URLs).
+  # Allowlist them for Netlify's secrets scanning so builds don't fail.
+  SECRETS_SCAN_OMIT_KEYS = "VITE_SUPABASE_ANON_KEY,VITE_SUPABASE_URL,VITE_CLERK_PUBLISHABLE_KEY"
