@@ -63,7 +63,7 @@ const handleSubmit = async () => {
       contact_pref: formData.contactPreference,
     }
 
-    const { error } = await supabase.from('Contracts').insert([contractData])
+    const { error } = await supabase.from('Contracts').upsert([contractData], { onConflict: 'user_id' })
 
     if (error) {
       console.error('Error saving contract:', error)
