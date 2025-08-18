@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Phone, Mail, MapPin, Clock, Send, CheckCircle,Building,MessageSquare
-} from 'lucide-react'
+import { Phone, Mail, MapPin, Clock, Send, CheckCircle, Building } from 'lucide-react'
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -14,7 +13,9 @@ const Contact = () => {
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [error, setError] = useState(null)
 
+  // Update form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prev => ({
@@ -23,81 +24,58 @@ const Contact = () => {
     }))
   }
 
+  // Real API call; set endpoint per your integration
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 2000))
-    
+    setError(null)
+    try {
+      // Example endpoint below; adjust the URL for your backend or service.
+      const res = await fetch('https://formspree.io/f/mwkjaqged', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      })
+      if (res.ok) {
+        setIsSubmitted(true)
+      } else {
+        const data = await res.json()
+        setError(data.error || 'Failed to send. Try again later.')
+      }
+    } catch (err) {
+      setError('Network error. Please check your connection and try again.')
+    }
     setIsSubmitting(false)
-    setIsSubmitted(true)
   }
 
   const contactInfo = [
     {
-      icon: <Phone className="w-6 h-6" />,
-      title: "Phone",
-      details: [
-        "+1 (555) 123-4567",
-        "+1 (555) 987-6543"
-      ],
+      icon: <Phone className="w-6 h-6" />, title: "Phone",
+      details: ["9818982741", "9654391201", "9582368743"],
       color: "bg-blue-100 text-blue-600"
     },
     {
-      icon: <Mail className="w-6 h-6" />,
-      title: "Email",
-      details: [
-        "info@ezbuilds.com",
-        "support@ezbuilds.com"
-      ],
+      icon: <Mail className="w-6 h-6" />, title: "Email",
+      details: ["Infoezybuilds@gmail.com"],
       color: "bg-green-100 text-green-600"
     },
     {
-      icon: <MapPin className="w-6 h-6" />,
-      title: "Office",
-      details: [
-        "123 Construction Ave",
-        "New York, NY 10001"
-      ],
+      icon: <MapPin className="w-6 h-6" />, title: "Office",
+      details: ["1405, 14th Floor, Aggarwal tower, NSP, Pitampura", "Delhi, 110034"],
       color: "bg-purple-100 text-purple-600"
     },
     {
-      icon: <Clock className="w-6 h-6" />,
-      title: "Hours",
-      details: [
-        "Mon-Fri: 8:00 AM - 6:00 PM",
-        "Sat: 9:00 AM - 4:00 PM"
-      ],
+      icon: <Clock className="w-6 h-6" />, title: "Hours",
+      details: ["Mon-Fri: 8:00 AM - 6:00 PM", "Sat: 9:00 AM - 4:00 PM"],
       color: "bg-orange-100 text-orange-600"
     }
   ]
 
   const departments = [
-    {
-      name: "General Inquiries",
-      email: "info@ezbuilds.com",
-      phone: "+1 (555) 123-4567",
-      description: "For general questions about our services"
-    },
-    {
-      name: "Project Management",
-      email: "projects@ezbuilds.com",
-      phone: "+1 (555) 123-4568",
-      description: "For ongoing project updates and coordination"
-    },
-    {
-      name: "Sales & Quotes",
-      email: "sales@ezbuilds.com",
-      phone: "+1 (555) 123-4569",
-      description: "For new project inquiries and quotes"
-    },
-    {
-      name: "Support",
-      email: "support@ezbuilds.com",
-      phone: "+1 (555) 123-4570",
-      description: "For technical support and warranty claims"
-    }
+    { name: "General Inquiries", email: "Infoezybuilds@gmail.com", phone: "9818982741", description: "For general questions about our services" },
+    { name: "Project Management", email: "Infoezybuilds@gmail.com", phone: "9654391201", description: "For ongoing project updates and coordination" },
+    { name: "Sales & Quotes", email: "Infoezybuilds@gmail.com", phone: "9582368743", description: "For new project inquiries and quotes" },
+    { name: "Support", email: "Infoezybuilds@gmail.com", phone: "9818982741", description: "For technical support and warranty claims" }
   ]
 
   if (isSubmitted) {
@@ -118,16 +96,10 @@ const Contact = () => {
           <button
             onClick={() => {
               setIsSubmitted(false)
-              setFormData({
-                name: '',
-                email: '',
-                phone: '',
-                company: '',
-                subject: '',
-                message: ''
-              })
+              setFormData({name: '', email: '', phone: '', company: '', subject: '', message: ''})
+              setError(null)
             }}
-            className="w-full bg-secondary text-white py-3 rounded-lg hover:bg-secondary/90 transition-colors"
+            className="w-full bg-[#546FFF] text-white py-3 rounded-lg font-semibold hover:bg-[#4255c7] transition-colors"
           >
             Send Another Message
           </button>
@@ -137,7 +109,7 @@ const Contact = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-8">
       <div className="container mx-auto px-4">
         {/* Header */}
         <motion.div
@@ -146,92 +118,54 @@ const Contact = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          <h1 className="text-5xl md:text-6xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-5">
             Get in Touch
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Ready to start your construction project? Have questions about our services? 
-            We're here to help. Contact us today and let's build something amazing together.
+          <p className="text-xl md:text-2xl text-gray-600 max-w-3xl mx-auto">
+            Ready to start your construction project or have a unique question? We're here. Reach out and let's build something extraordinary together.
           </p>
         </motion.div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }}
-            className="bg-white rounded-lg shadow-lg p-8"
+            className="bg-white rounded-2xl shadow-lg p-8"
           >
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Send us a Message</h2>
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <h2 className="text-2xl font-bold text-gray-900 mb-7">Send us a Message</h2>
+            <form 
+              className="space-y-6"
+              onSubmit={e => {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(e.target).entries());
+                console.log('Contact form submission:', data);
+                setIsSubmitted(true);
+              }}
+            >
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
+                  <input type="text" name="name" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                  <input type="email" name="email" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent" />
                 </div>
               </div>
-
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                  <input type="tel" name="phone" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  />
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Company</label>
+                  <input type="text" name="company" className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent" />
                 </div>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject *
-                </label>
-                <select
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                >
+                <label className="block text-sm font-medium text-gray-700 mb-2">Subject *</label>
+                <select name="subject" required className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent">
                   <option value="">Select a subject</option>
                   <option value="General Inquiry">General Inquiry</option>
                   <option value="Project Quote">Project Quote</option>
@@ -241,42 +175,19 @@ const Contact = () => {
                   <option value="Other">Other</option>
                 </select>
               </div>
-
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Message *
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                  rows={5}
-                  placeholder="Tell us about your project or how we can help you..."
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                />
+                <label className="block text-sm font-medium text-gray-700 mb-2">Message *</label>
+                <textarea name="message" required rows={5} placeholder="Tell us about your project or how we can help you..." className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#546FFF] focus:border-transparent" />
               </div>
-
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-secondary text-white py-3 rounded-lg font-semibold hover:bg-secondary/90 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full bg-[#546FFF] text-white py-3 rounded-lg font-semibold hover:bg-[#4255c7] transition-colors flex items-center justify-center gap-2 mt-2"
               >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Message
-                  </>
-                )}
+                <Send className="w-5 h-5" />
+                Send Message
               </button>
             </form>
           </motion.div>
-
           {/* Contact Information */}
           <motion.div
             initial={{ opacity: 0, x: 20 }}
@@ -287,7 +198,7 @@ const Contact = () => {
             {/* Contact Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {contactInfo.map((info, index) => (
-                <div key={index} className="bg-white rounded-lg shadow-lg p-6">
+                <div key={index} className="bg-white rounded-2xl shadow-lg p-6">
                   <div className={`w-12 h-12 ${info.color} rounded-full flex items-center justify-center mb-4`}>
                     {info.icon}
                   </div>
@@ -300,9 +211,8 @@ const Contact = () => {
                 </div>
               ))}
             </div>
-
             {/* Departments */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Contact by Department</h3>
               <div className="space-y-4">
                 {departments.map((dept, index) => (
@@ -310,35 +220,32 @@ const Contact = () => {
                     <h4 className="font-semibold text-gray-900 mb-1">{dept.name}</h4>
                     <p className="text-sm text-gray-600 mb-2">{dept.description}</p>
                     <div className="flex items-center gap-4 text-sm">
-                      <span className="text-secondary">{dept.email}</span>
+                      <span className="text-[#546FFF]">{dept.email}</span>
                       <span className="text-gray-500">{dept.phone}</span>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-
             {/* Office Location */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-4">Visit Our Office</h3>
               <div className="bg-gray-100 rounded-lg p-4 mb-4">
                 <div className="flex items-start gap-3">
                   <Building className="w-6 h-6 text-gray-600 mt-1" />
                   <div>
                     <p className="font-medium text-gray-900">EzyBuilds Headquarters</p>
-                    <p className="text-gray-600">123 Construction Avenue</p>
-                    <p className="text-gray-600">New York, NY 10001</p>
+                    <p className="text-gray-600">1405, 14th Floor, Aggarwal tower, NSP, Pitampura</p>
+                    <p className="text-gray-600">Delhi, 110034</p>
                   </div>
                 </div>
               </div>
               <p className="text-sm text-gray-600">
-                Schedule a meeting at our office to discuss your project in detail. 
-                We offer free consultations for all potential clients.
+                Schedule a meeting at our office to discuss your project in detail. We offer free consultations for all potential clients.
               </p>
             </div>
           </motion.div>
         </div>
-
         {/* CTA Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -346,21 +253,21 @@ const Contact = () => {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="text-center mt-16"
         >
-          <div className="bg-secondary rounded-lg p-8 text-white">
+          <div className="bg-[#546FFF] rounded-lg p-8 text-white">
             <h2 className="text-2xl font-bold mb-4">Ready to Start Your Project?</h2>
             <p className="text-lg mb-6 opacity-90">
               Don't wait! Get in touch with us today and let's discuss your construction needs.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a
-                href="/dashboard"
-                className="bg-white text-secondary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                href="#contact"
+                className="bg-white text-[#546FFF] px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
               >
                 Request Quote
               </a>
               <a
                 href="tel:+15551234567"
-                className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-secondary transition-colors"
+                className="border border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-[#546FFF] transition-colors"
               >
                 Call Now
               </a>
@@ -372,4 +279,4 @@ const Contact = () => {
   )
 }
 
-export default Contact 
+export default Contact

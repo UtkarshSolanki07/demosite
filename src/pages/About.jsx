@@ -68,14 +68,7 @@ const About = () => {
     }
   ]
 
-  const milestones = [
-    { year: '2008', event: 'EzyBuilds Founded', description: 'Started with a vision to revolutionize construction' },
-    { year: '2012', event: 'First Major Project', description: 'Completed our first commercial high-rise building' },
-    { year: '2016', event: 'Expansion', description: 'Expanded operations to serve multiple states' },
-    { year: '2020', event: 'Sustainability Initiative', description: 'Launched green building certification program' },
-    { year: '2023', event: 'Digital Innovation', description: 'Integrated AI and IoT technologies in construction' }
-  ]
-
+  
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -262,48 +255,7 @@ const About = () => {
         </div>
       </section>
 
-      {/* Timeline Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-4">
-              Our Journey
-            </h2>
-            <p className="text-xl text-gray-600">Milestones that shaped our legacy</p>
-          </motion.div>
-
-          <div className="max-w-4xl mx-auto">
-            {milestones.map((milestone, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className={`flex items-center gap-8 mb-12 ${index % 2 === 0 ? 'flex-row' : 'flex-row-reverse'}`}
-              >
-                <div className="flex-1">
-                  <div className={`bg-white/80 backdrop-blur rounded-2xl p-6 shadow-lg ${index % 2 === 0 ? 'text-right' : 'text-left'}`}>
-                    <div className="text-sm font-semibold text-blue-600 mb-2">{milestone.year}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-2">{milestone.event}</h3>
-                    <p className="text-gray-600">{milestone.description}</p>
-                  </div>
-                </div>
-                <div className="w-4 h-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex-shrink-0 relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full animate-ping opacity-20"></div>
-                </div>
-                <div className="flex-1"></div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
+      
       {/* CTA Section */}
       <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-600 relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
@@ -314,29 +266,32 @@ const About = () => {
             viewport={{ once: true }}
             className="text-center text-white max-w-4xl mx-auto"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 drop-shadow-xl">
               Ready to Build Your Dream Project?
             </h2>
-            <p className="text-xl mb-8 opacity-90">
-              Let's transform your vision into reality. Our expert team is ready to bring your ideas to life with precision, quality, and care.
+            <p className="text-xl mb-10 opacity-90 font-medium">
+              Let's transform your vision into reality. Our expert team is ready to bring your ideas to life with precision, quality, and care. 
+              <br/>Experience transparent communication and unwavering support at every step.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-colors flex items-center gap-2 justify-center"
+            <div className="flex flex-col sm:flex-row gap-5 justify-center">
+              <motion.a
+                href="#contact"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.98 }}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-10 py-4 rounded-2xl font-bold shadow-xl hover:from-cyan-400 hover:to-indigo-500 focus:outline-none flex items-center gap-3 justify-center text-lg transition-all duration-200 group"
               >
-                Start Your Project
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-2 justify-center"
+                <span className="inline-block group-hover:translate-x-1 transition-transform">Start Your Project</span>
+                <ArrowRight className="w-5 h-5 animate-bounce-x group-hover:text-yellow-300 duration-300" />
+              </motion.a>
+              <motion.a
+                href="tel:+1234567890"
+                whileHover={{ scale: 1.07 }}
+                whileTap={{ scale: 0.98 }}
+                className="border-2 border-white text-white px-10 py-4 rounded-2xl font-bold hover:bg-white hover:text-blue-600 transition-colors flex items-center gap-3 shadow-xl justify-center text-lg"
               >
                 <Phone className="w-5 h-5" />
-                Call Us Today
-              </motion.button>
+                <span>Call Us Today</span>
+              </motion.a>
             </div>
           </motion.div>
         </div>

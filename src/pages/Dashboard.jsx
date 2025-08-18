@@ -88,8 +88,8 @@ const Dashboard = () => {
 
   const handleBudgetChange = (e) => {
     const number = e.target.value.replace(/[^0-9]/g, '')
-    const formatted = new Intl.NumberFormat('en-US', {
-      style: 'currency', currency: 'USD', minimumFractionDigits: 0, maximumFractionDigits: 0
+    const formatted = new Intl.NumberFormat('en-IN', {
+      style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0
     }).format(number)
     setFormData(prev => ({ ...prev, budget: formatted }))
   }
@@ -384,7 +384,7 @@ const handleSubmit = async () => {
                       value={formData.budget}
                       onChange={handleBudgetChange}
                       required
-                      placeholder="$500,000"
+                      placeholder="₹50,00,000"
                       className="w-full px-6 py-4 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 bg-gray-50/50"
                     />
                   </div>
@@ -546,8 +546,17 @@ const handleSubmit = async () => {
                 {currentStep < 3 ? (
                   <button
                     type="button"
+                    disabled={
+                      (currentStep === 1 && (!formData.projectTitle.trim() || !formData.projectType.trim() || !formData.description.trim() || !formData.location.trim())) ||
+                      (currentStep === 2 && (!formData.budget.trim() || !formData.timeline.trim()))
+                    }
                     onClick={() => setCurrentStep(currentStep + 1)}
-                    className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+                    className={
+                      `px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-xl hover:from-blue-700 hover:to-purple-700 transition-all duration-300 font-medium shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 ` +
+                      (((currentStep === 1 && (!formData.projectTitle.trim() || !formData.projectType.trim() || !formData.description.trim() || !formData.location.trim())) ||
+                        (currentStep === 2 && (!formData.budget.trim() || !formData.timeline.trim())))
+                        ? 'opacity-50 cursor-not-allowed' : '')
+                    }
                   >
                     Next
                   </button>

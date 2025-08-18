@@ -6,6 +6,7 @@ import {
   Star as StarIcon
 } from 'lucide-react'
 import ProjectHistory from '../components/ProjectHistory'
+import { supabase } from '../utils/supabaseClient'
 
 const Profile = ({ projects = [], loadingProjects = false, errorProjects = null }) => {
   const { user } = useUser()
@@ -45,46 +46,108 @@ const Profile = ({ projects = [], loadingProjects = false, errorProjects = null 
   }
 
   useEffect(() => {
-    // Load user profile data from Clerk user object
-    setClientData({
-      firstName: user?.firstName || 'Demo',
-      lastName: user?.lastName || 'Client',
-      email: user?.emailAddresses[0]?.emailAddress || 'demo@client.com',
-      phone: '',
-      company: '',
-      position: '',
-      joinDate: new Date().toISOString(),
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-      status: 'Active',
-      address: '',
-      preferredContact: 'email',
-      completedProjects: 0,
-      activeProjects: 0,
-      totalSpent: 0,
-      averageRating: null,
-    })
-    setFormData({
-      firstName: user?.firstName || '',
-      lastName: user?.lastName || '',
-      phone: '',
-      company: '',
-      position: '',
-      address: '',
-      preferredContact: 'email',
-    })
+    const fetchProfile = async () => {
+      if (!user) return;
+      const email = user?.emailAddresses[0]?.emailAddress;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('email', email)
+        .single();
+      if (error || !data) {
+        setClientData({
+          firstName: user?.firstName || '',
+          lastName: user?.lastName || '',
+          email: email || '',
+          avatar: '',
+          phone: '',
+          company: '',
+          position: '',
+          joinDate: new Date().toISOString(),
+          status: 'Active',
+          address: '',
+          preferredContact: 'email',
+          completedProjects: 0,
+          activeProjects: 0,
+          totalSpent: 0,
+          averageRating: null,
+        })
+        setFormData({
+          firstName: user?.firstName || '',
+          lastName: user?.lastName || '',
+          phone: '',
+          company: '',
+          position: '',
+          address: '',
+          preferredContact: 'email',
+        })
+      } else {
+        setClientData({
+          firstName: data.first_name || '',
+          lastName: data.last_name || '',
+          email: data.email,
+          avatar: data.avatar_url || '',
+          phone: data.phone || '',
+          company: data.company || '',
+          position: data.position || '',
+          joinDate: data.created_at || '',
+          status: data.status || 'Active',
+          address: data.address || '',
+          preferredContact: data.preferred_contact || 'email',
+          completedProjects: 0,
+          activeProjects: 0,
+          totalSpent: 0,
+          averageRating: null,
+        })
+        setFormData({
+          firstName: data.first_name || '',
+          lastName: data.last_name || '',
+          phone: data.phone || '',
+          company: data.company || '',
+          position: data.position || '',
+          address: data.address || '',
+          preferredContact: data.preferred_contact || 'email',
+        })
+      }
+    }
+    fetchProfile()
   }, [user])
 
-  const handleSave = () => {
-    // In a real app, this would update the client data via API
+  const handleSave = async () => {
+    // Store/update profile info in Supabase first!
+    const email = clientData.email || formData.email || user?.emailAddresses[0]?.emailAddress;
+    if (email) {
+      const { error } = await supabase.from('profiles').upsert({
+        email,
+        first_name: formData.firstName,
+        last_name: formData.lastName,
+        avatar_url: avatarFile || clientData.avatar || '',
+        phone: formData.phone || '',
+        company: formData.company || '',
+        position: formData.position || '',
+        address: formData.address || '',
+        status: clientData.status || 'Active',
+        preferred_contact: formData.preferredContact || 'email',
+      });
+      if (error) {
+        console.error('Supabase upsert error:', error);
+        alert('There was an error saving your profile: ' + (error.message || error.description));
+        return; // do not exit editing if there was an error!
+      }
+    } else {
+      alert('Email is missing; cannot save profile!');
+      return;
+    }
+
     setClientData(prev => ({
       ...prev,
       ...formData,
       avatar: avatarFile || prev.avatar,
-    }))
+    }));
     if (avatarFile) {
       localStorage.setItem('userAvatar', avatarFile)
     }
-    setIsEditing(false)
+    setIsEditing(false);
   }
 
   const handleCancel = () => {
@@ -101,9 +164,9 @@ const Profile = ({ projects = [], loadingProjects = false, errorProjects = null 
   }
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-US', {
+    return new Intl.NumberFormat('en-IN', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'INR',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(amount)
@@ -429,7 +492,6 @@ const Profile = ({ projects = [], loadingProjects = false, errorProjects = null 
 }
 
 // --- Project history logic ---
-import { supabase } from '../utils/supabaseClient'
 const stringToBigInt = (str) => {
   let hash = 0n
   for (let i = 0; i < str.length; i++) {

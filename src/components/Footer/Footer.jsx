@@ -78,20 +78,21 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <Mail size={18} className="text-orange-500 mr-3 mt-1 flex-shrink-0" />
-                <span className="text-gray-400">info@ezybuilds.in</span>
+                <span className="text-gray-400">Infoezybuilds@gmail.com</span>
               </li>
               <li className="flex items-start">
                 <Phone size={18} className="text-orange-500 mr-3 mt-1 flex-shrink-0" />
                 <div className="text-gray-400">
-                  <div>+91 98765 43210</div>
-                  <div>+91 87654 32109</div>
+                  <div>9818982741</div>
+                  <div>9654391201</div>
+                  <div>9582368743</div>
                 </div>
               </li>
               <li className="flex items-start">
                 <MapPin size={18} className="text-orange-500 mr-3 mt-1 flex-shrink-0" />
                 <span className="text-gray-400">
-                  Plot No. 45, Sector 62,<br />
-                  Noida, Uttar Pradesh 201309
+                  1405, 14th Floor, Aggarwal tower, NSP, Pitampura<br />
+                  Delhi, 110034
                 </span>
               </li>
             </ul>
