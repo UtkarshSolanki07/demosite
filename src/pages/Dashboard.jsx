@@ -8,7 +8,6 @@ import {
 import { supabase } from '../utils/supabaseClient'
 import ProjectHistory from '../components/ProjectHistory'
 
-// Mock project types data
 const projectTypes = [
   { id: 1, name: 'Residential Construction', description: 'Homes, apartments, condos' },
   { id: 2, name: 'Commercial Building', description: 'Offices, retail, warehouses' },
@@ -35,26 +34,23 @@ const Dashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  // Project history state
+  
   const [projects, setProjects] = useState([])
   const [loadingProjects, setLoadingProjects] = useState(true)
   const [errorProjects, setErrorProjects] = useState(null)
 
-  // Fetch project history for the user
   useEffect(() => {
     const fetchProjects = async () => {
       if (!user) return;
       setLoadingProjects(true);
       setErrorProjects(null);
       try {
-        // Always use the same user_id format as when saving (BigInt string)
         const numericId = stringToBigInt(user.id).toString();
         const { data, error } = await supabase
           .from('Contracts')
           .select('*')
           .eq('user_id', numericId);
         if (error) throw error;
-        // Map fields to what ProjectHistory expects
         const mapped = (data || []).map((p) => ({
           id: p.id,
           title: p.project_title,
@@ -118,10 +114,10 @@ const handleSubmit = async () => {
       return
     }
 
-    await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 2000)) 
     setIsSubmitting(false)
     setIsSubmitted(true)
-    // After submit, project history will refresh due to isSubmitted in useEffect
+    
   }
 
   const resetForm = () => {
@@ -133,7 +129,7 @@ const handleSubmit = async () => {
     })
   }
 
-  // Success page component
+  
   if (isSubmitted) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center py-8">
